@@ -9,7 +9,6 @@ function debug($arr) {
     echo "</pre>";
 }
 
-
 //keys     0    1    2
 $chars = ['a', 'b', 'c']; // одно и тоже
 $sameChars = [0 => 'a', 1 => 'b', 2 => 'c']; // одно и тоже
@@ -18,6 +17,7 @@ $sameChars = [0 => 'a', 1 => 'b', 2 => 'c']; // одно и тоже
 //echo $chars[1];
 //var_dump($chars);
 
+### FOREACH
 
 $chars = ['a', 'b', 'c',];
 foreach ($chars as $value) {
@@ -145,6 +145,134 @@ $phpArrayFunctions = [
 ];
 // Заведите отдельню страницу например php-array-functions.php вставьте туда этот массив.
 // И через цикл "красиво" распечатайте информацию используя html теги
+
+
+
+### Cycles 2. Lesson 6. FOR
+$users = [
+    0 => ['name' => 'Anna', 'salary' => 100, 'age' => 25, 'gender' => 0, 'job' => 'Alphabet'],
+    1 => ['name' => 'Bob', 'salary' => 40, 'age' => 65, 'gender' => 1, 'job' => 'Alphabet'],
+];
+
+// Перебор массива в прямом порядке
+$count = count($users);
+for ($i = 0; $i < $count; $i++) {
+    $user = $users[$i];
+    //echo $user['name'] . "<br>";
+}
+//echo "<hr>";
+
+// Перебор массива в обратном порядке (с конца к началу)
+$count = count($users);
+for ($i = $count; $i > 0; $i--) {
+    $nubmer = $i - 1;
+    //echo $nubmer . "<br>";
+    $user = $users[$nubmer];
+    //echo $user['name'] . "<br>";
+}
+
+$users = [
+    ['name' => 'Anna', 'salary' => 100, 'age' => 25, 'gender' => 0, 'job' => 'Alphabet'],
+    ['name' => 'Bob', 'salary' => 40, 'age' => 65, 'gender' => 1, 'job' => 'Alphabet'],
+    ['name' => 'Cecil', 'salary' => 130, 'age' => 40, 'gender' => 1, 'job' => 'Alphabet'],
+    ['name' => 'Diana', 'salary' => 50, 'age' => 30, 'gender' => 0, 'job' => 'BBC'],
+    ['name' => 'Elena', 'salary' => 60, 'age' => 20, 'gender' => 0, 'job' => 'BBC'],
+    ['name' => 'Fedor', 'salary' => 90, 'age' => 50, 'gender' => 1, 'job' => 'BBC'],
+];
+function usersFindWhere($users, $salary, $gender) {
+    $filteredUsers = [];
+    foreach ($users as $user) {
+        if ($user['gender'] === $gender && $user['salary'] >= $salary) {
+            $filteredUsers[] = $user; // или тоже самое array_push($filteredUsers, $user);
+        }
+    }
+    return $filteredUsers;
+}
+$filteredUsers = usersFindWhere($users, 20, 0);
+//debug($filteredUsers);
+
+$users = [
+    ['name' => 'Anna', 'salary' => 100, 'age' => 25, 'gender' => 0, 'job' => 'Alphabet'],
+    ['name' => 'Bob', 'salary' => 40, 'age' => 65, 'gender' => 1, 'job' => 'Alphabet'],
+    ['name' => 'Cecil', 'salary' => 130, 'age' => 40, 'gender' => 1, 'job' => 'Alphabet'],
+    ['name' => 'Diana', 'salary' => 50, 'age' => 30, 'gender' => 0, 'job' => 'BBC'],
+    ['name' => 'Elena', 'salary' => 60, 'age' => 20, 'gender' => 0, 'job' => 'BBC'],
+    ['name' => 'Fedor', 'salary' => 90, 'age' => 50, 'gender' => 1, 'job' => 'BBC'],
+];
+function usersFindWhere2($users, $salary, $gender) {
+    $filteredUsers = [];
+    for ($i = 0; $i < count($users); $i++) {
+        $user = $users[$i];
+        if ($user['gender'] === $gender && $user['salary'] >= $salary) {
+            $filteredUsers[] = $user; // или тоже самое array_push($filteredUsers, $user);
+        }
+    }
+    return $filteredUsers;
+}
+$filteredUsers = usersFindWhere2($users, 30, 1);
+//debug($filteredUsers);
+
+$users = [
+    ['name' => 'Anna', 'salary' => 100, 'age' => 25, 'gender' => 0, 'job' => 'Alphabet'],
+    ['name' => 'Bob', 'salary' => 40, 'age' => 65, 'gender' => 1, 'job' => 'Alphabet'],
+    ['name' => 'Cecil', 'salary' => 130, 'age' => 40, 'gender' => 1, 'job' => 'Alphabet'],
+    ['name' => 'Diana', 'salary' => 50, 'age' => 30, 'gender' => 0, 'job' => 'BBC'],
+    ['name' => 'Elena', 'salary' => 60, 'age' => 20, 'gender' => 0, 'job' => 'BBC'],
+    ['name' => 'Fedor', 'salary' => 90, 'age' => 50, 'gender' => 1, 'job' => 'BBC'],
+];
+// $count = count($users); // Кол-во элементов массива
+// array_push($users, 'sss'); // Добавть элемент массива в конец
+// $lastElement = array_pop($users); // Вырезать последний элемент массива (и вернуть его наружу)
+
+// $firstElement = array_shift($users); // Вырезать первый элемент массива (и вернуть его наружу)
+// array_unshift($users, ['name' => 'Egor']); // Вставляет в начало массива элемент
+// array_key_exists('job', $users[1]); // Проверяет существует ли ключ в массиве
+// $res = array_values($users[0]); // Вернет все значения массива (с обнуленными ключами)
+// $res = array_keys($users); // Верент все ключи массива
+
+// $a = [10, 20, 30];
+// $b = [100, 200, 300];
+// $c = array_merge($a, $b); // Склеит 2 и более массива в один
+
+
+
+### ДЗ
+
+// 1 Разберите пример работы с циклом while
+// Пример работы while: https://www.php.net/manual/ru/control-structures.while.php
+// $i = 1;
+// while ($i <= 10) { // Пока $i меньше чем 11
+//    echo $i++; // выодим переменную и увеличиваем ее значение на 1
+// }
+
+// 2 Разберите пример работы с циклом do while
+// Пример работы do while: https://www.php.net/manual/ru/control-structures.do.while.phpp
+// $i = 1;
+// do {
+//    echo $i;
+//    $i++;
+// } while ($i <= 10);
+
+$users = [
+    ['name' => 'Anna', 'salary' => 100, 'age' => 25, 'gender' => 0, 'job' => 'Alphabet'],
+    ['name' => 'Bob', 'salary' => 40, 'age' => 65, 'gender' => 1, 'job' => 'Alphabet'],
+    ['name' => 'Cecil', 'salary' => 130, 'age' => 40, 'gender' => 1, 'job' => 'Alphabet'],
+    ['name' => 'Diana', 'salary' => 50, 'age' => 30, 'gender' => 0, 'job' => 'BBC'],
+    ['name' => 'Elena', 'salary' => 60, 'age' => 20, 'gender' => 0, 'job' => 'BBC'],
+    ['name' => 'Fedor', 'salary' => 90, 'age' => 50, 'gender' => 1, 'job' => 'BBC'],
+];
+// 3 Напишите функцию которая через цикл FOR переберет всех сотрудников из всех компаний
+// и ВЕРНЕТ(не выведет а именно вернет) общую ЗП.
+
+$numbres = range(1, 20); // Вернет массив чисел от 1 до 20
+// 4 Напишите функцию которая переберет массив $numbres через FOR и вернет массив только четных числ которые в нем есть.
+// Конструкция $isEvenNumber = (11 % 2 === 0); должна помочь, она определяет четность числа
+// Символ процента % это математический опрератор для целочисленного деления. Можно погуглить как поределить четность числа в php
+// Т.е. если 11 делится на 2 на цело без остатка(или остаток от деления = 0) то 11 четное число
+
+// 5 Задача повышеной сложности! Если сможете решить то очень хорошо!!!
+// Напишите алгоритм который вернет имя человека из массива $users с наибольшей зарплатой
+
 
 
 

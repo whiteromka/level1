@@ -2,37 +2,11 @@
 <br>
 <a href="/pages/conditions.php">Conditions</a>
 <br>
-<a href="/pages/custom-functions.php">Cycles</a>
+<a href="/pages/custom-functions.php">custom-functions</a>
 <br>
 <a href="/pages/cycles.php">Cycles</a>
 <br>
 <?php
-echo "<br>";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
