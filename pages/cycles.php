@@ -280,3 +280,123 @@ $numbres = range(1, 20); // Вернет массив чисел от 1 до 20
 
 
 
+
+
+### Cycles 3. Lesson 7. Решаем задачи с циклами
+
+$users = [
+    ['name' => 'Anna', 'salary' => 100, 'age' => 25, 'gender' => 0, 'job' => 'Alphabet'],
+    ['name' => 'Bob', 'salary' => 40, 'age' => 65, 'gender' => 1, 'job' => 'BBC'],
+];
+# 1 Написать функцию которая нагененрирует N-ое (1-100000) кол-во пользователей в массив и вернет его. Пример массива $users
+# - цикл
+# - генерация данных
+# - добавление данных
+function getUsers($count)
+{
+    $users = [];
+    for ($i = 0; $i < $count; $i++) {
+        $user = createRandomUser();
+        $users[] = $user;
+    }
+    return $users;
+}
+
+function createRandomUser()
+{
+    $age = random_int(14, 80);
+    $gender = random_int(0, 1);
+    $salary = random_int(3, 15) * 10;
+    $jobList = ['Alphabet', 'BBC', 'Alfha', 'Yandex', 'MTS'];
+    $jobKey = array_rand($jobList);
+    $job = $jobList[$jobKey];
+    $name = getRandomName();
+    return ['name' => $name, 'salary' => $salary, 'age' => $age, 'gender' => $gender, 'job' => $job];
+}
+
+function getRandomName()
+{
+    $name = '';
+    $alphabet = range('a', 'z');
+    $charCount = random_int(2, 10);
+    for ($i = 0; $i < $charCount; $i++) {
+        $key = array_rand($alphabet);
+        $char = $alphabet[$key];
+        $name = $name . $char;
+    }
+    return $name;
+}
+
+$users = getUsers(1000);
+//debug($users);
+
+
+
+$phones = ['89159100000', '+7 915 910_0000', '8 (915) 910 0000', '8-915-910-00-00', '+79159100000', '33-22-11'];
+# 2 Фильтрация массива телефонов мобильных номеров. Нужно сделать массив чистых телефонов
+# - цикл
+# - убрать лишние символы
+# - заменить +7 в начале на 8
+# - проверить кол-во цифр, заменить +7 на 8
+# - добавление данных в итоговый массив
+function getCorrectPhones($phones)
+{
+    $correctPhones = [];
+    foreach ($phones as $phone) {
+        $correctPhone = getCorrectPhone($phone);
+        $correctPhones[] = $correctPhone;
+    }
+    return $correctPhones;
+}
+
+function getCorrectPhone($phone)
+{
+    $badChars = [' ', '-', '_', '(', ')'];
+    $phone = str_replace($badChars, '', $phone);
+    $phone = str_replace('+7', '8', $phone);
+    return $phone;
+//    $firstNumber = $phone[0];
+//    if ($firstNumber === '7') {
+//        $phone = substr($phone, 1, -1); // !!!
+//        $phone = '8' . $phone;
+//    }
+//    return $phone;
+}
+
+$phones = getCorrectPhones($phones);
+//debug($phones);
+
+
+
+
+### ДЗ
+
+# 1 Сопоставить данные в массивах
+# - цикл по $users
+# - вложенный цикл по $data
+# - сравниваем id, объединяем подмассивы
+$users = [
+    ['id' => 1, 'name' => 'Anna', 'salary' => 100, 'age' => 25, 'gender' => 0, 'job' => 'Alphabet'],
+    ['id' => 2, 'name' => 'Bob', 'salary' => 40, 'age' => 65, 'gender' => 1, 'job' => 'Alphabet'],
+];
+$data = [
+    ['id' => 1, 'passport' => '1111 1111', 'country' => 'Austria'],
+    ['id' => 2, 'passport' => '2222 2222', 'country' => 'Belarus'],
+];
+function combineData($users, $data)
+{
+    return [];
+}
+
+# 2 Задача со *. Повышеной сложности. Написать функцию которая елочкой выведет *.
+# На каждом следующем уровне должно быть на одну * больше.
+# Пример: stars(3)
+# *
+# * *
+# * * *
+
+# 3 Разобрать функции ниже. И запомнить что они делают
+# разобрать функцию explode()
+# разобрать функцию implode()
+# разобрать функцию in_array() похожа на array_key_exists()
+# разобрать функцию sort()
