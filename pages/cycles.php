@@ -1,13 +1,8 @@
 <a href="/">Go to main page</a>
 <h1>Cycles</h1>
 <?php
+require '../funcs.php';
 
-// Кастомная функция для красивой распечатки массивов
-function debug($arr) {
-    echo "<pre>";
-    print_r($arr); // Отладочная функция для распечатки массивов. Аналог var_dump()
-    echo "</pre>";
-}
 
 //keys     0    1    2
 $chars = ['a', 'b', 'c']; // одно и тоже
@@ -179,7 +174,17 @@ $users = [
     ['name' => 'Elena', 'salary' => 60, 'age' => 20, 'gender' => 0, 'job' => 'BBC'],
     ['name' => 'Fedor', 'salary' => 90, 'age' => 50, 'gender' => 1, 'job' => 'BBC'],
 ];
-function usersFindWhere($users, $salary, $gender) {
+
+/**
+ * Фильтрация пользаков по полу и зп
+ *
+ * @param array $users - Это пользователи
+ * @param int $salary
+ * @param int $gender
+ * @return array
+ */
+function usersFindWhere(array $users, int $salary, int $gender): array
+{
     $filteredUsers = [];
     foreach ($users as $user) {
         if ($user['gender'] === $gender && $user['salary'] >= $salary) {
@@ -189,6 +194,9 @@ function usersFindWhere($users, $salary, $gender) {
     return $filteredUsers;
 }
 $filteredUsers = usersFindWhere($users, 20, 0);
+
+
+
 //debug($filteredUsers);
 
 $users = [
@@ -292,7 +300,12 @@ $users = [
 # - цикл
 # - генерация данных
 # - добавление данных
-function getUsers($count)
+
+/**
+ * @param int $count
+ * @return array
+ */
+function getUsers(int $count = 100): array
 {
     $users = [];
     for ($i = 0; $i < $count; $i++) {
@@ -327,7 +340,7 @@ function getRandomName()
     return $name;
 }
 
-$users = getUsers(1000);
+$users = getUsers(123);
 //debug($users);
 
 
