@@ -2,27 +2,21 @@
 
 require_once '../funcs.php';
 
-// http://level1.local/pages/form.php?name=aaaa&password=bbbb&hero=%D0%9A%D1%80%D1%8B%D1%81%D0%B0+%D0%9B%D0%B0%D1%80%D0%B8%D1%81%D0%B0
-
+echo 'GET' . '<br>';
 debug($_GET);
+
 $name = '';
+$pass = '';
+
 if (!empty($_GET) && array_key_exists('name', $_GET)) {
     $name = $_GET['name'];
-    // save in DB
 }
-echo "<hr>";
 
-debug($_POST);
-$pass = '';
-if (!empty($_POST) && array_key_exists('password', $_POST)) {
-    $pass = $_POST['password'];
-    // save in DB
+if (!empty($_GET) && array_key_exists('password', $_GET)) {
+    $pass = $_GET['password'];
 }
+
 echo "<hr>";
-
-debug($_REQUEST);
-
-
 
 ?>
 
@@ -38,13 +32,12 @@ debug($_REQUEST);
 <body>
     <div>
         <h2>My Form</h2>
-        <form method="POST" action="">
+        <form method="GET" action="">
             <p>
                 <!-- Обычный инпут. Атрибут type="" может принимать несколько значений "text", "email", "password", "submit", "reset" -->
                 <b>Ваше имя:</b>
                 <br>
-                <?php $a = 12432453;?>
-                <input type="password" name="name" value="<?php echo $a; ?>">
+                <input type="text" name="name" value="<?php echo $name; ?>">
             </p>
 
             <p>
@@ -56,12 +49,20 @@ debug($_REQUEST);
 
             <!-- Селект или дропдаун -->
             <p>Любымый персонаж</p>
+            <?php
+                $heroList = ['Чебурашка', 'Крокодил Гена'];
+            ?>
             <select name="hero">
                 <option value=""></option>
-                <option selected value="Чебурашка">Чебурашка</option>
-                <option value="Крокодил Гена">Крокодил Гена</option>
-                <option value="Шапокляк">Шапокляк</option>
-                <option value="Крыса Лариса">Крыса Лариса</option>
+                <?php
+                    foreach ($heroList as $hero) {
+                        $selected = '';
+                        if ($hero === $_GET['hero']) {
+                            $selected = 'selected';
+                        }
+                        echo "<option $selected value='$hero'>$hero</option>";
+                    }
+                ?>
             </select>
 
             <p>
