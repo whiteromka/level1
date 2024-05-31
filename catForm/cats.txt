@@ -1,0 +1,6 @@
+wwww,11,Boy,5
+aaa,3,Boy,5
+aaa123214,3,Girl,5
+123214,3,Boy,5
+Barsik,11,Girl,1
+Vasya,22,Boy,7

@@ -5,7 +5,7 @@
  *
  * @param array $arr - любой массив
  */
-function debug(array $arr): void
+function debug($arr): void
 {
     echo "<pre>";
     print_r($arr); // Отладочная функция для распечатки массивов. Аналог var_dump()
