@@ -1,0 +1,19 @@
+.red-border {
+     border: 2px solid red;
+ }
+.blue-border {
+    border: 2px solid blue;
+}
+.green-border {
+    border: 2px solid green;
+}
+.yellow-border {
+    border: 2px solid yellow;
+}
+.purple-border {
+    border: 2px solid purple;
+}
+.myCol {
+    background: orange;
+    border: 2px solid #212121;
+}

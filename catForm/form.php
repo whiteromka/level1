@@ -12,14 +12,12 @@ $errorMessage = '';
 $genderList = ['Girl', 'Boy']; // Варианты для дропдауна
 $sociabilityList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Варианты для дропдауна
 
-if (validateGET()) {
-    $catDataString = constructCatDataString();
-    saveCat($catDataString);
-    $successMessage = 'Вы успешно сохранили кота ' . getDataFromGET('name') . '!';
-    //header('Location: /catform/form.php'); // Редирект на чистую форму
-} else {
-    if (!empty($_GET)) {
-        $errorMessage = 'Заполните все данные по коту!';
+if (!empty($_GET)) {
+    $validateResult = validateGET();
+    if ($validateResult['success']) {
+        $catDataString = constructCatDataString();
+        saveCat($catDataString);
+        $successMessage = 'Вы успешно сохранили кота ' . getDataFromGET('name') . '!';
     }
 }
 
@@ -41,20 +39,43 @@ function constructCatDataString(): string
 /**
  * Валидирует данные из $_GET
  *
- * @return bool
+ * @return array
  */
-function validateGET(): bool
+function validateGET(): array
 {
-    if (
-        !empty(getDataFromGET('name')) &&
-        !empty(getDataFromGET('age')) &&
-        !empty(getDataFromGET('gender')) &&
-        !empty(getDataFromGET('sociability'))
-    ) {
-        return true;
-    } else {
-        return false;
+//    if (
+//        !empty(getDataFromGET('name')) &&
+//        !empty(getDataFromGET('age')) &&
+//        !empty(getDataFromGET('gender')) &&
+//        !empty(getDataFromGET('sociability'))
+//    ) {
+//        return true;
+//    } else {
+//        return false;
+//    }
+    $errorName = '';
+    $errorAge = '';
+    if (!empty($_GET)) {
+        if (strlen(getDataFromGET('name')) < 5 ) {
+            $errorName = 'Имя кота слишком короткое';
+        }
     }
+
+    $age = (int) getDataFromGET('age');
+    if (!is_int($age) || !($age < 50)) {
+        $errorAge = 'Возраст кота должен быть числом меньше 50';
+    }
+
+    if (empty($errorName) && empty($errorAge)) {
+        $success = true;
+    } else {
+        $success = false;
+    }
+    return [
+        'success' => $success,
+        'errorName' => $errorName,
+        'errorAge' => $errorAge
+    ];
 }
 
 /**
@@ -119,6 +140,7 @@ function getSavedCats(): array
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Котаформа</title>
     <link rel="stylesheet" href="./style.css">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
@@ -127,35 +149,46 @@ function getSavedCats(): array
 </head>
 <body>
 
-<div class="container myCont">
+<!-- Навигация по сайту -->
+<div class="nav bg-dark">
+    <div class="container">
 
-    <div class="row myRow">
-        <div class="col myCol">1 из 2</div>
-        <div class="col myCol">2 из 2</div>
+        <ul class="nav bg-dark">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Main page</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/catform/form.php">Catform</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/bootstrap">Bootstrap grid</a>
+            </li>
+        </ul>
+
     </div>
+</div>
+<br>
+<br>
 
-    <div class="row myRow">
-        <div class="col-1 myCol">1 из 3</div>
-        <div class="col-2 myCol">2 из 3</div>
-        <div class="col-9 myCol">3 из 3</div>
-    </div>
+<!-- Котаформа -->
+<div class="container ">
 
-    <div class="row myRow">
-        <div class="col myCol">1 из 1</div>
-    </div>
-
-    <h3 class="header">Котаформа</h3>
+    <h3 class="text-center">Cat form</h3>
     <div>
         <form method="GET" action="">
             <div class="form-group">
                 <label for="catNameInput">Cat name here</label>
                 <input type="text" class="form-control" name="name" id="catNameInput"
-                       value="<?php echo getDataFromGET('name'); ?>">
+                       value="<?php echo getDataFromGET('name'); ?>"
+                >
+                <p class="text-danger"> <?= $validateResult['errorName'] ?? ''?> </p>
             </div>
             <div class="form-group">
                 <label for="catAgeInput">Cat age here</label>
                 <input type="text" name="age" class="form-control" id="catAgeInput"
-                       value="<?php echo getDataFromGET('age'); ?>">
+                       value="<?php echo getDataFromGET('age'); ?>"
+                >
+                <p class="text-danger"> <?= $validateResult['errorAge'] ?? '' ?> </p>
             </div>
             <p>
                 Cat gender:
@@ -182,7 +215,6 @@ function getSavedCats(): array
                         if ($sociabilityValue == getDataFromGET('sociability')) {
                             $selected = 'selected';
                         }
-
                         echo "<option $selected value='$sociabilityValue'>$sociabilityValue</option>";
                     }
                     ?>
@@ -206,48 +238,75 @@ function getSavedCats(): array
             ?>
         </form>
     </div>
-    <hr>
+</div>
 
-    <div>
-        <h3>Saved cats:</h3>
+
+<!-- Вывод котов -->
+<div class="container">
+    <hr>
+    <br>
+    <h3 class="text-center">Saved cats:</h3>
+    <div class="row">
         <?php
-        $cats = getSavedCats();
-        foreach ($cats as $cat) {
-            // строка ... {$cat['name']} ... остальная строка ... // { ... } позволяют внедрить в строку сложные переменные
-            $n = $cat['name'];
-            echo "<p> 
-                        Name: <b>$n</b>, 
-                        Age: <b>" . $cat['age'] . "</b>, 
-                        Gender: <b>{$cat['gender']}</b>, 
-                        Sociability: <b>{$cat['sociability']}</b> 
-                </p>";
-        }
+            $cats = getSavedCats();
+            foreach ($cats as $cat) :
+        ?>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card m-b-10">
+                    <img src="../bootstrap/pic/cat1.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title"><?= $cat['name'] . ' (' . $cat['age'] . ')' ?> </h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of.</p>
+                        <ul>
+                            <li>Gender: <b> <?= $cat['gender'] ?> </b> </li>
+                            <li>Sociability: <b> <?= $cat['sociability'] ?></b> </li>
+                        </ul>
+                        <a href="#" class="btn btn-primary">Заказать</a>
+                    </div>
+                </div>
+            </div>
+        <?php
+            endforeach;
         ?>
     </div>
+    <br>
 </div>
+
+<br>
+<br>
+<br>
+<br>
+
 </body>
 </html>
 
 <!--
 
-ДЗ урока 12.
+ДЗ урока 13.
 
 1) Любую задачу с кодварс
 
-2) В котаформе нужно домучать 2-ва инпута, "Cat gender" и "Cat sociability". Преобразовать их в бутстраповкие инпуты-дропдауны
+2) В котаформе забутстрапить инпуты и дропдауны с помощью сетки бутстрапа
+   https://getbootstrap.ru/docs/4.4/layout/grid/ так чтобы:
+  - на маленьких экранах, все элементы формы отображались друг под другом, т.е. занимали максимальную ширину
+  - на средних экранах занимали выстраивались в 2-е колонки, т.е. занимали половину ширины экрана
+  - на самых больших экранах все инпуты и дропдауны выстраивались в 1 ряд
 
-3 а) Блоке где выводятся сохраненные коты "Saved cats". Нужно переписать этот блок так что бы все сохраненные коты выводились
-как в этом примере с бутстрап уведомленими https://getbootstrap.ru/docs/4.4/components/alerts/
-Т.е.  каждого кота выводить в отдельном блоке-уведомлении со своим цветом.
-Коты у которых социальность выше 7 должны выводиться в зеленом блоке.
-Коты у которых социальность ниже 2 должны выводиться в сером блоке.
-Коты у которых социальность от 2 до 3 должны выводиться в красном блоке.
-Чтонибуть похожее с синим и желтым блоком, на ваш вкус.
+  С кнопками сохранить кота и очистить форму так заморачиваться не нужно.
+  Их можно просто  вынести в свой собственных отдельный div или класс row, пусть просто отдельно всегда будут.
 
-3 б) Если уверены в своих силах можно попробовать вывести котов через карточки https://getbootstrap.ru/docs/4.4/components/card/ и систему сеток https://getbootstrap.ru/docs/4.4/layout/grid/
+3) Попробуйте сделать футер(низ) страницы по такому же принципу.
+    Использую сетку бутстрапа расчертите разметку на 2-е или на 3-и колонки.
+    В каждую колонку добавьте по 2-ве любые ссылки на любые сайты.
+    - на маленьких экранах, все ссылки должны отображались друг под другом, т.е. занимать максимальную ширину
+    - на средних выстраиваться в 2-е или 3-и колонки, т.е. либо половину ширины экрана либо треть
+    - на больших в 3-и или четыре колонки
 
 
-4) https://getbootstrap.ru/docs/4.4/components/alerts/  просмотреть примеры / прокликать ссылки в левом вертикальном меню компонентов бутстрапа.
+- Если заморочится с бутстрапом и все сделать аккуратно и красиво то этот микро проект можно будет добавить в портфолио
+или показать на собесе как один из учебных проектов, будет маленький плюс вам.
+- Если со стилями и бутстрапом не охото заморачиваться то можно забить, т.к. это просто разметка, правда в этом случае
+я бы не рекомендовал показывать этот проект без готовой разметки и стилей.
 
 
 -->
