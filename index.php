@@ -4,9 +4,10 @@
     // include_once './emailValidator.php'; // стандартное, строгое подключение файла
 
     require_once './funcs.php'; // стандартное, строгое подключение файла
-
+    require_once './testauth/logic.php';
     require_once './emailValidator.php';
 ?>
+<p><?= greeting()?></p>
 <a href="/pages/variables.php">Variables</a>
 <br>
 <a href="/pages/conditions.php">Conditions</a>

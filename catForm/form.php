@@ -1,6 +1,7 @@
 <?php
 
 require_once '../funcs.php';
+require_once '../testauth/logic.php';
 
 // Это для отладки
 //debug($_GET);
@@ -172,6 +173,7 @@ function getSavedCats(): array
 
 <!-- Котаформа -->
 <div class="container ">
+    <p><?= greeting()?></p>
 
     <h3 class="text-center">Cat form</h3>
     <div>
