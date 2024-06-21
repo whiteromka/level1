@@ -6,8 +6,8 @@
 function getUsers(): array
 {
     return [
-        0 => ['id' => 1, 'login' => 'Rom', 'password' => '123', 'city' => 'K'],
-        1 => ['id' => 2, 'login' => 'Anna', 'password' => '321', 'city' => 'A'],
+        ['id' => 1, 'login' => 'Rom', 'password' => '123', 'city' => 'K'],
+        ['id' => 2, 'login' => 'Anna', 'password' => '321', 'city' => 'A'],
     ];
 }
 
@@ -19,10 +19,7 @@ function getUsers(): array
  */
 function getUserFromDB(array $users): array
 {
-    if (
-        !empty($_POST['login']) &&
-        !empty($_POST['password'])
-    ) {
+    if (!empty($_POST['login']) && !empty($_POST['password'])) {
         $login = $_POST['login'];
         $password = $_POST['password'];
         foreach ($users as $userData) {
@@ -38,25 +35,36 @@ function getUserFromDB(array $users): array
 }
 
 /**
- * Вернет приветствие авторизованому пользователю
+ * Вернет приветствие авторизованому пользователю, иначе верент просьбу о авторизации
  *
  * @return string
  */
 function greeting(): string
 {
-    // 1 get data ID from cookie
-    if (array_key_exists('id', $_COOKIE)) {
-        $userId = $_COOKIE['id'];
+    // Если в кукуа есть ID и X
+    if (
+        array_key_exists('id', $_COOKIE) &&
+        array_key_exists('x', $_COOKIE)
+    ) {
+        // То сохраним их в переменные
+        $userId = $_COOKIE['id']; // 1
+        $login = $_COOKIE['x']; // 135405ec6015c57cd29e49eb8d5ad3eabbd3cb7a
     } else {
+        // Иначе вернем сообщение о том что нужно залогиниться
         return 'U must login in';
     }
 
-    // 2 ID >>> user
-    $users = getUsers();
-    foreach ($users as $user) {
-        if ((string)$userId === (string)$user['id']) {
-            return 'Hi ' . $user['login'] . ' , we miss u so much!';
+
+    $users = getUsers(); // Все пользователи из БД
+    foreach ($users as $user) { // перебираем по одному
+        if (
+            (string)$userId === (string)$user['id'] && // Если ID из кук совпал с ID пользователя в БД и
+            $login === sha1($user['login'])             // если захешированный логин из кук совпал с зашешированным логином из БД
+        ) {
+            // то приветствуем по иимени
+            return 'Hi ' . $user['login'] . ' , we missed u so much!';
         }
     }
+    // во всех остальных случаях просим залогиниться
     return 'U must login in';
 }

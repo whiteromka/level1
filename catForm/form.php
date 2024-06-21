@@ -16,8 +16,8 @@ $sociabilityList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Варианты для �
 if (!empty($_GET)) {
     $validateResult = validateGET();
     if ($validateResult['success']) {
-        $catDataString = constructCatDataString();
-        saveCat($catDataString);
+        $catDataString = constructCatDataString(); // создаем данные для нового кота
+        saveCat($catDataString); // сохраняем в файл
         $successMessage = 'Вы успешно сохранили кота ' . getDataFromGET('name') . '!';
     }
 }

@@ -3,17 +3,33 @@
 require_once '../funcs.php';
 require_once './logic.php';
 
+debug($_POST);
+
 $users = getUsers();
-$login = '';
-$password = '';
 $user = getUserFromDB($users);
+$error = '';
+
+// Блок для залогинивания пользователя
 if (!empty($user)) {
     $timeDie = time() + (60 * 60 * 24 * 365 * 10);
-    setcookie('id', $user['id'], $timeDie, '/'); // Ставим куку
+    setcookie('id', $user['id'], $timeDie, '/'); // Ставим куку ID
+    setcookie('x', sha1($user['login']), $timeDie, '/'); // Ставим куку login
     header("Location: http://level1.local/testauth/form.php"); // Редиректим на эту же страницу
     die();
 }
 
+// Блок для ошибок залогинивания. Если POST не пустой, а пользователь в БД пустой, т.е. не нашелся пользователь, то создаем ошибку залогинивания
+else if (!empty($_POST) && empty($user)) {
+    $error = 'Пароль или логин не верны!';
+}
+
+// Блок для разлогинивания
+if (!empty($_POST['logout'])) {
+    setcookie('id', '', 1, '/');
+    setcookie('x', '', 1, '/');
+    header("Location: http://level1.local/testauth/form.php"); // Редиректим на эту же страницу
+    die();
+}
 
 ?>
 <!doctype html>
@@ -56,9 +72,18 @@ if (!empty($user)) {
                     <input type="password" name="password" class="form-control" id="password" value="">
                 </div>
 
-                <p>
-                    <input type="submit" class="btn btn-outline-primary" value="Login in!!!!">
-                </p>
+                <div>
+                    <p class="text-danger"><?= $error ?></p>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <input type="submit" class="btn btn-outline-primary btn-block_" value="Login in">
+                    </div>
+                    <div class="col-6">
+                        <input type="submit" name="logout" class="btn btn-outline-danger btn-block_" value="Logout">
+                    </div>
+                </div>
 
             </form>
         </div>
