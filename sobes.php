@@ -96,18 +96,20 @@ a($arr);
 // Ошибки в php: Notice, Warning, Fatal Error - это просто нагуглить что от чего чем отличается
 function a2(array $a) {}
 
-//try catch, finaly и throw
-try {
-    $res = 1 / 0;
-    //a2('123424');
-    // ...
-} catch (Exception $e) {
+//try catch, finaly и throw ЭТОТ БЛОК РАССМОТРИМ ПОЗДНЕЕ
+//set_error_handler(function($errno, $errstr, $errfile, $errline) {
+//    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+//});
+//try {
+//    $res = 1 / 0;
+//} catch (Exception $e) {
 //    echo $e->getMessage() . "<br>";
 //    echo $e->getCode(). "<br>";
 //    echo $e->getFile(). "<br>";
 //    echo $e->getLine(). "<br>";
-  //  echo 'oq ds fdg fhgbfhgf gf';
-}
+//    echo 'oq ds fdg fhgbfhgf gf';
+//}
+
 
 // Замыкание - анонимные функции
 $name = 'Rom';
@@ -123,13 +125,13 @@ $greet = function(string $name, string $lName, string $mName)
 $x = 1;
 $y = 2;
 $fn1 = fn($x, $y) => $x + $y;
-echo $fn1($x, $y);
+//echo $fn1($x, $y);
 
 // Эквивалентно
 $fn2 = function ($x, $y) {
     return $x + $y;
 };
-$fn2();
+$fn2($x, $y);
 
 
 
